@@ -93,3 +93,5 @@ At the end of this project, you are expected to be able to `explain to anyone`, 
 - `Techium` will be the name of the company we will use across our webpages.
 
 ## Sitemap of the project
+![image](https://github.com/CappieGold/holbertonschool-web_front_end/assets/144028326/88ae9acb-4251-4f2b-899a-17410299471a)
+![image](https://github.com/CappieGold/holbertonschool-web_front_end/assets/144028326/33a6395f-5126-464f-b57e-8b720f29b449)
