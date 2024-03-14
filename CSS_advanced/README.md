@@ -65,3 +65,4 @@ At the end of this project, you are expected to be able to `explain to anyone`, 
 - Your code should be W3C compliant and validate with `W3C-Validator`
 
 ## End goal of the project
+![image](https://github.com/CappieGold/holbertonschool-web_front_end/assets/144028326/c4dea4ed-57ff-43f0-a041-300d673469d6)
