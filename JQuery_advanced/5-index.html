@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+    <head>
+
+        <meta charset="utf-8" />
+        <title>Task 5</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <script>
+            function createFamilyTree() {
+                // Créer la table
+                const table = $("<table></table>");
+
+                // Créer le thead et la ligne d'en-tête
+                const thead = $("<thead></thead>");
+                const headerRow = $("<tr></tr>");
+                const th1 = $("<th>Firstname</th>");
+                const th2 = $("<th>Lastname</th>");
+
+                // Ajouter les cellules au header
+                headerRow.append(th1, th2);
+                thead.append(headerRow);
+
+                // Créer un tbody vide
+                const tbody = $("<tbody></tbody>");
+
+                // Assembler la table
+                table.append(thead);
+                table.append(tbody);
+
+                // Ajouter la table au body
+                $("body").append(table);
+            }
+
+            function addNewMember(firstName, lastName) {
+                // Créer une nouvelle ligne
+                const row = $("<tr></tr>");
+
+                // Créer les cellules
+                const tdFirstName = $("<td></td>").text(firstName);
+                const tdLastName = $("<td></td>").text(lastName);
+                const tdRemove = $("<td>(x)</td>").css("background-color", "orange");
+
+                // Ajouter un gestionnaire de clic pour supprimer la ligne
+                tdRemove.on("click", function () {
+                    $(this).closest("tr").remove();
+                });
+
+                // Assembler la ligne
+                row.append(tdFirstName, tdLastName, tdRemove);
+
+                // Ajouter la ligne au tbody de la table
+                $("table tbody").append(row);
+            }
+
+            createFamilyTree();
+            addNewMember("Guillaule", "Salva");
+            addNewMember("Arielle", "Snizt");
+            addNewMember("Fanette", "Snitz");
+            addNewMember("Gerard", "Snitz");
+            addNewMember("Victor", "Salva");
+
+        </script>
+    </body>
+
+</html>
