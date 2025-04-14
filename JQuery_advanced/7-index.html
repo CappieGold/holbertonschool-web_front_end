@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task 7</title>
+    <!-- Version complète minifiée de jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </head>
+  <body>
+    <script>
+      function createSearchForm() {
+        const form = $("<form></form>");
+        const input = $("<input type='text'>");
+        const submit = $("<input type='submit' value='Search'>");
+        const ul = $("<ul></ul>");
+
+        form.append(input, submit);
+        $("body").append(form, ul);
+
+        form.on("submit", function (e) {
+          e.preventDefault(); // Empêche le rechargement de la page
+          const searchValue = input.val().trim();
+          ul.empty(); // Vide les anciens résultats
+          if (searchValue) {
+            queryWikipedia(searchValue);
+          }
+        });
+      }
+
+      function addNewArticle(id, title, snippet) {
+        const li = $("<li></li>");
+        const firstParagraph = $("<p></p>").append(
+          $("<span></span>").text(id + " - "),
+          $("<b></b>").text(title)
+        );
+        const secondParagraph = $("<p></p>").html(snippet);
+        li.append(firstParagraph, secondParagraph);
+        $("ul").append(li);
+      }
+
+      function queryWikipedia(search) {
+        $.ajax({
+          url: "https://en.wikipedia.org/w/api.php",
+          method: "GET",
+          dataType: "json",
+          data: {
+            action: "query",
+            list: "search",
+            srsearch: search,
+            format: "json",
+            origin: "*"
+          },
+          success: function (response) {
+            const results = response.query.search;
+            results.forEach(function (item) {
+              addNewArticle(item.pageid, item.title, item.snippet);
+            });
+          },
+          error: function () {
+            alert("An error occurred while querying Wikipedia.");
+          }
+        });
+      }
+
+      // Initialiser le formulaire au chargement
+      $(document).ready(function () {
+        createSearchForm();
+      });
+    </script>
+  </body>
+</html>
