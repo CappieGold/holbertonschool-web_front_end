@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task 9</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+      #pagination {
+        list-style: none;
+        padding: 0;
+        display: flex;
+      }
+      #pagination li {
+        margin-left: 10px;
+        cursor: pointer;
+      }
+      #pagination li.current-page {
+        font-weight: bold;
+      }
+      .loading {
+        opacity: 0.2;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      function createSearchForm() {
+        const form = $("<form></form>");
+        const input = $("<input type='text'>");
+        const submit = $("<input type='submit' value='Search'>");
+        const ul = $("<ul></ul>");
+        const pagination = $("<ul id='pagination'></ul>");
+
+        form.append(input, submit);
+        $("body").append(form, ul, pagination);
+
+        form.on("submit", function (e) {
+          e.preventDefault();
+          const searchValue = input.val().trim();
+          ul.empty();
+          pagination.empty();
+          if (searchValue) {
+            queryWikipedia(searchValue, 0);
+          }
+        });
+      }
+
+      function addNewArticle(id, title, snippet) {
+        const li = $("<li></li>");
+        const firstParagraph = $("<p></p>").append(
+          $("<span></span>").text(id + " - "),
+          $("<b></b>").text(title)
+        );
+        const secondParagraph = $("<p></p>").html(snippet);
+        li.append(firstParagraph, secondParagraph);
+        $("ul").first().append(li);
+      }
+
+      function displayLoading(loading) {
+        const ul = $("ul").first();
+        if (loading) {
+          ul.wrap("<div class='loading'></div>");
+        } else {
+          ul.unwrap();
+        }
+      }
+
+      function queryWikipedia(search, offset = 0) {
+        displayLoading(true);
+
+        $.ajax({
+          url: "https://en.wikipedia.org/w/api.php",
+          method: "GET",
+          dataType: "json",
+          data: {
+            action: "query",
+            list: "search",
+            srsearch: search,
+            format: "json",
+            origin: "*",
+            sroffset: offset
+          },
+          success: function (response) {
+            const results = response.query.search;
+            const totalHits = response.query.searchinfo.totalhits;
+
+            results.forEach(function (item) {
+              addNewArticle(item.pageid, item.title, item.snippet);
+            });
+
+            buildPagination(totalHits, 10, offset, search);
+            displayLoading(false);
+          },
+          error: function () {
+            alert("An error occurred while querying Wikipedia.");
+            displayLoading(false);
+          }
+        });
+      }
+
+      function buildPagination(numberOfItems, itemsPerPage, currentOffset, searchQuery) {
+        const pagination = $("#pagination");
+        pagination.empty();
+
+        const totalPages = Math.ceil(numberOfItems / itemsPerPage);
+        const currentPage = Math.floor(currentOffset / itemsPerPage) + 1;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const li = $("<li></li>").text(i);
+
+          if (i === currentPage) {
+            li.addClass("current-page");
+          }
+
+          li.on("click", function () {
+            const newOffset = (i - 1) * itemsPerPage;
+            $("ul").first().empty();
+            queryWikipedia(searchQuery, newOffset);
+          });
+
+          pagination.append(li);
+        }
+      }
+
+      $(document).ready(function () {
+        createSearchForm();
+      });
+    </script>
+  </body>
+</html>
