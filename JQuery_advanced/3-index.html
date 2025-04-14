@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+    <head>
+
+        <meta charset="utf-8" />
+        <title>Task 3</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <script>
+            function createFamilyTree() {
+                var table = $(document.createElement("table"));
+
+                // Créer l'en-tête de la table
+                var thead = $(document.createElement("thead"));
+                var headerRow = $(document.createElement("tr"));
+                var th1 = $(document.createElement("th")).text("Firstname");
+                var th2 = $(document.createElement("th")).text("Lastname");
+
+                // Ajouter les <th> dans la ligne d'en-tête
+                headerRow.append(th1);
+                headerRow.append(th2);
+                // Ajouter la ligne d'en-tête dans le <thead>
+                thead.append(headerRow);
+                // Ajouter l'en-tête à la table
+                table.append(thead);
+
+                // Créer le corps de la table
+                var tbody = $(document.createElement("tbody"));
+                var row1 = $(document.createElement("tr"));
+                var td1 = $(document.createElement("td")).text("Guillaume");
+                var td2 = $(document.createElement("td")).text("Salva");
+                var row2 = $(document.createElement("tr"));
+                var td3 = $(document.createElement("td")).text("Paulette");
+                var td4 = $(document.createElement("td")).text("Salva");
+                var row3 = $(document.createElement("tr"));
+                var td5 = $(document.createElement("td")).text("Antoine");
+                var td6 = $(document.createElement("td")).text("Salva");
+
+                // Ajouter les <td> dans la ligne
+                row1.append(td1);
+                row1.append(td2);
+                row2.append(td3);
+                row2.append(td4);
+                row3.append(td5);
+                row3.append(td6);
+                // Ajouter la ligne au <tbody>
+                tbody.append(row1);
+                tbody.append(row2);
+                tbody.append(row3);
+                // Ajouter le corps à la table
+                table.append(tbody);
+
+                // Ajouter la table au body de la page
+                $("body").append(table);
+}
+            createFamilyTree();
+
+        </script>
+    </body>
+
+</html>
