@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3-index.html avec js-cookie</title>
+  <style>
+    a.logout {
+      font-weight: normal;
+      font-style: italic;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body onload="showWelcomeMessageOrForm()">
+
+  <div id="login-form">
+    <h2>Login to the website</h2>
+    <input type="text" id="firstname" placeholder="firstname">
+    <input type="text" id="email" placeholder="email">
+    <button onclick="setCookiesAndShow()">Log me in</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+  <script>
+    function showForm() {
+      const w = document.getElementById('welcome');
+      if (w) w.remove();
+      document.getElementById('login-form').style.display = 'block';
+    }
+
+    function hideForm() {
+      document.getElementById('login-form').style.display = 'none';
+    }
+
+    function deleteCookiesAndShowForm() {
+      Cookies.remove('firstname', { path: '/' });
+      Cookies.remove('email',     { path: '/' });
+      showForm();
+    }
+
+    function setCookiesAndShow() {
+      const first = document.getElementById('firstname').value.trim();
+      const mail  = document.getElementById('email').value.trim();
+
+      Cookies.set('firstname', first, { expires: 10, path: '/' });
+      Cookies.set('email',     mail,  { expires: 10, path: '/' });
+
+      showWelcomeMessageOrForm();
+    }
+
+    function showWelcomeMessageOrForm() {
+      const first = Cookies.get('firstname');
+      const mail  = Cookies.get('email');
+
+      if (!first || !mail) {
+        showForm();
+      } else {
+        hideForm();
+
+        if (!document.getElementById('welcome')) {
+          const h1 = document.createElement('h1');
+          h1.id = 'welcome';
+          h1.textContent = `Welcome ${first}`;
+
+          const logout = document.createElement('a');
+          logout.className = 'logout';
+          logout.textContent = '(logout)';
+          logout.onclick = deleteCookiesAndShowForm;
+
+          h1.appendChild(logout);
+          document.body.appendChild(h1);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
