@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3-index.html</title>
+  <style>
+    a.logout {
+      font-weight: normal;
+      font-style: italic;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body onload="showWelcomeMessageOrForm()">
+
+  <div id="login-form">
+    <h2>Login to the website</h2>
+    <input type="text" id="firstname" placeholder="firstname">
+    <input type="text" id="email" placeholder="email">
+    <button onclick="setAndShow()">Log me in</button>
+  </div>
+
+</body>
+<script>
+  function getCookie(name) {
+    return document.cookie
+      .split('; ')
+      .map(c => c.split('='))
+      .find(([key]) => key === name)?.[1] || '';
+  }
+
+  function showForm() {
+    const w = document.getElementById('welcome');
+    if (w) w.remove();
+    document.getElementById('login-form').style.display = 'block';
+  }
+
+  function hideForm() {
+    document.getElementById('login-form').style.display = 'none';
+  }
+
+  function deleteCookiesAndShowForm() {
+    document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    showForm();
+  }
+
+  function setAndShow() {
+    const firstname = encodeURIComponent(
+      document.getElementById('firstname').value.trim()
+    );
+    const email = encodeURIComponent(
+      document.getElementById('email').value.trim()
+    );
+    const d = new Date();
+    d.setTime(d.getTime() + 10 * 24 * 60 * 60 * 1000);
+    const expires = d.toUTCString();
+
+    document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    document.cookie = `firstname=${firstname}; expires=${expires}; path=/;`;
+    document.cookie = `email=${email}; expires=${expires}; path=/;`;
+
+    showWelcomeMessageOrForm();
+  }
+
+  function showWelcomeMessageOrForm() {
+    const firstname = getCookie('firstname');
+    const email     = getCookie('email');
+
+    if (!firstname || !email) {
+      showForm();
+    } else {
+      hideForm();
+
+      if (!document.getElementById('welcome')) {
+        const h1 = document.createElement('h1');
+        h1.id = 'welcome';
+        h1.textContent = `Welcome ${decodeURIComponent(firstname)}`;
+
+        const logout = document.createElement('a');
+        logout.className = 'logout';
+        logout.textContent = '(logout)';
+        logout.onclick = deleteCookiesAndShowForm;
+
+        h1.appendChild(logout);
+        document.body.appendChild(h1);
+      }
+    }
+  }
+</script>
+</html>
