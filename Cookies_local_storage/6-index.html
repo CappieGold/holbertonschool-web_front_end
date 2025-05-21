@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopping Cart</title>
+  <style>
+    li { cursor: pointer; margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <ul id="store"></ul>
+  <p id="cart-info"></p>
+
+  <script>
+    const availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+    const storeEl = document.getElementById("store");
+    const cartInfoEl = document.getElementById("cart-info");
+
+    function init() {
+      if (typeof sessionStorage === "undefined") {
+        return alert("Sorry, your browser does not support Session storage.");
+      }
+      createStore();
+      displayCart();
+    }
+
+    function addItemToCart(item) {
+      sessionStorage.setItem(item, "true");
+      displayCart();
+    }
+
+    function createStore() {
+      availableItems.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        li.addEventListener("click", () => addItemToCart(item));
+        storeEl.appendChild(li);
+      });
+    }
+
+    function displayCart() {
+      const count = sessionStorage.length;
+      cartInfoEl.textContent = count
+        ? `You previously had ${count} items in your cart`
+        : "";
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
