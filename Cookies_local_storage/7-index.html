@@ -28,13 +28,13 @@
   <script>
     const availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
 
-    // 1) Récupère le panier depuis sessionStorage (objet) ou renvoie {}
+    /* 1) Récupère le panier depuis sessionStorage (objet) ou renvoie {} */
     function getCartFromStorage() {
       const json = sessionStorage.getItem('cart');
       return json ? JSON.parse(json) : {};
     }
 
-    // 2) Ajoute 1 unité de item dans le panier et ré-affiche
+    /* 2) Ajoute 1 unité de item dans le panier et ré-affiche */
     function addItemToCart(item) {
       const cart = getCartFromStorage();
       cart[item] = (cart[item] || 0) + 1;
@@ -42,7 +42,7 @@
       displayCart();
     }
 
-    // 3) Supprime complètement item du panier et ré-affiche
+    /* 3) Supprime complètement item du panier et ré-affiche*/
     function removeItemFromCart(item) {
       const cart = getCartFromStorage();
       delete cart[item];
@@ -50,13 +50,13 @@
       displayCart();
     }
 
-    // 4) Vide tout le sessionStorage et ré-affiche
+    /* 4) Vide tout le sessionStorage et ré-affiche */
     function clearCart() {
       sessionStorage.clear();
       displayCart();
     }
 
-    // 5) Construit la liste des produits disponibles
+    /* 5) Construit la liste des produits disponibles */
     function createStore() {
       const h2 = document.createElement('h2');
       h2.textContent = 'Available products:';
@@ -72,7 +72,7 @@
       document.body.appendChild(ul);
     }
 
-    // 6) Affiche la section "Your cart:" et prépare le container
+    /* 6) Affiche la section "Your cart:" et prépare le container */
     function displayCart() {
       let section = document.getElementById('cart-section');
 
@@ -89,33 +89,33 @@
 
         document.body.appendChild(section);
       } else {
-        // on efface l’ancien contenu
+        /* on efface l’ancien contenu */
         document.getElementById('cart-items').innerHTML = '';
       }
 
       updateCart();
     }
 
-    // 7) Met à jour le contenu du panier
+    /* 7) Met à jour le contenu du panier */
     function updateCart() {
       const cart = getCartFromStorage();
       const container = document.getElementById('cart-items');
       const ul = document.createElement('ul');
 
-      // Lien "Clear my cart"
+      /* Lien "Clear my cart" */
       const clearLi = document.createElement('li');
       clearLi.textContent = 'Clear my cart';
       clearLi.className = 'clear-cart';
       clearLi.addEventListener('click', clearCart);
       ul.appendChild(clearLi);
 
-      // Si panier vide
+      /* Si panier vide */
       if (Object.keys(cart).length === 0) {
         const li = document.createElement('li');
         li.textContent = 'Your cart is empty';
         ul.appendChild(li);
       } else {
-        // Pour chaque produit, afficher "ITEM x QTY (remove)"
+        /* Pour chaque produit, afficher "ITEM x QTY (remove)" */
         for (const [item, qty] of Object.entries(cart)) {
           const li = document.createElement('li');
           li.textContent = `${item} x ${qty}`;
@@ -133,7 +133,7 @@
       container.appendChild(ul);
     }
 
-    // 8) Initialisation au chargement
+    /* 8) Initialisation au chargement */
     function init() {
       if (typeof sessionStorage === 'undefined') {
         alert('Sorry, your browser does not support Web storage. Try again with a better one');
