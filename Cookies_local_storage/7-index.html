@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Cart with Session Storage</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+    }
+    ul { list-style: none; padding: 0; }
+    li { margin: 0.5rem 0; cursor: pointer; }
+    a.remove {
+      margin-left: 0.5rem;
+      font-style: italic;
+      color: red;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    li.clear-cart {
+      font-weight: bold;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+
+    // 1) Récupère le panier depuis sessionStorage (objet) ou renvoie {}
+    function getCartFromStorage() {
+      const json = sessionStorage.getItem('cart');
+      return json ? JSON.parse(json) : {};
+    }
+
+    // 2) Ajoute 1 unité de item dans le panier et ré-affiche
+    function addItemToCart(item) {
+      const cart = getCartFromStorage();
+      cart[item] = (cart[item] || 0) + 1;
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      displayCart();
+    }
+
+    // 3) Supprime complètement item du panier et ré-affiche
+    function removeItemFromCart(item) {
+      const cart = getCartFromStorage();
+      delete cart[item];
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      displayCart();
+    }
+
+    // 4) Vide tout le sessionStorage et ré-affiche
+    function clearCart() {
+      sessionStorage.clear();
+      displayCart();
+    }
+
+    // 5) Construit la liste des produits disponibles
+    function createStore() {
+      const h2 = document.createElement('h2');
+      h2.textContent = 'Available products:';
+      document.body.appendChild(h2);
+
+      const ul = document.createElement('ul');
+      availableItems.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.addEventListener('click', () => addItemToCart(item));
+        ul.appendChild(li);
+      });
+      document.body.appendChild(ul);
+    }
+
+    // 6) Affiche la section "Your cart:" et prépare le container
+    function displayCart() {
+      let section = document.getElementById('cart-section');
+
+      if (!section) {
+        section = document.createElement('div');
+        section.id = 'cart-section';
+        const h2 = document.createElement('h2');
+        h2.textContent = 'Your cart:';
+        section.appendChild(h2);
+
+        const container = document.createElement('div');
+        container.id = 'cart-items';
+        section.appendChild(container);
+
+        document.body.appendChild(section);
+      } else {
+        // on efface l’ancien contenu
+        document.getElementById('cart-items').innerHTML = '';
+      }
+
+      updateCart();
+    }
+
+    // 7) Met à jour le contenu du panier
+    function updateCart() {
+      const cart = getCartFromStorage();
+      const container = document.getElementById('cart-items');
+      const ul = document.createElement('ul');
+
+      // Lien "Clear my cart"
+      const clearLi = document.createElement('li');
+      clearLi.textContent = 'Clear my cart';
+      clearLi.className = 'clear-cart';
+      clearLi.addEventListener('click', clearCart);
+      ul.appendChild(clearLi);
+
+      // Si panier vide
+      if (Object.keys(cart).length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'Your cart is empty';
+        ul.appendChild(li);
+      } else {
+        // Pour chaque produit, afficher "ITEM x QTY (remove)"
+        for (const [item, qty] of Object.entries(cart)) {
+          const li = document.createElement('li');
+          li.textContent = `${item} x ${qty}`;
+
+          const removeLink = document.createElement('a');
+          removeLink.textContent = '(remove)';
+          removeLink.className = 'remove';
+          removeLink.addEventListener('click', () => removeItemFromCart(item));
+          li.appendChild(removeLink);
+
+          ul.appendChild(li);
+        }
+      }
+
+      container.appendChild(ul);
+    }
+
+    // 8) Initialisation au chargement
+    function init() {
+      if (typeof sessionStorage === 'undefined') {
+        alert('Sorry, your browser does not support Web storage. Try again with a better one');
+      } else {
+        createStore();
+        displayCart();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
